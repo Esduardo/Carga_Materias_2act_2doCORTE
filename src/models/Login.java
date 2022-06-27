@@ -1,11 +1,11 @@
 package models;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Scanner;
+import java.util.Iterator;
 
 public class Login {
-    static int posicion = 0;
+    static int  posicion = 0;
     static Scanner entrada = new Scanner(System.in);                    //listaAlumnos.get(i).getMatricula
     //------------------------------------------------------------------------------------------------------------------
     //                                          ARRAYLIST
@@ -18,8 +18,6 @@ public class Login {
         listaAlumnos.add(new Alumno("Samantha", 221218, 812122));
         return listaAlumnos;
     }
-
-    ArrayList<AlumnoCargado> listaCargada = new ArrayList();
     //------------------------------------------------------------------------------------------------------------------
     //                                                  INICIO DE SESION
     public static void iniciarSesion(){
@@ -48,7 +46,7 @@ public class Login {
     }
     //------------------------------------------------------------------------------------------------------------------
     //                                            SESIONES ALUMNO Y DOCENTE
-    public static void sesionAlumno(ArrayList<Alumno> listaAlumnos) {
+    public static int sesionAlumno(ArrayList<Alumno> listaAlumnos) {
         int contrasena;
         int ingMatricula;
         System.out.println(">>>                 UP CHIAPAS                <<<");
@@ -63,9 +61,11 @@ public class Login {
                 System.out.printf("*                      : ");
                 contrasena = entrada.nextInt();
                 if (listaAlumnos.get(i).getContrasena() == contrasena){
-                    sesionOnAlumno(listaAlumnos);
+                    sesionOnAlumno(listaAlumnos, ingMatricula);
                 }
+                return ingMatricula;
             }
+        return posicion;
         }
 
     public static void sesionDocente(){
@@ -80,13 +80,14 @@ public class Login {
             System.out.printf("*                      : ");
             contrasena = entrada.next();
             if("Diana123".equals(contrasena))
-                sesionOnDocente(lista(), CargaMaterias.listaMaterias, CargaMaterias.listaMateriasMan);
+                sesionOnDocente(lista(), CargaMaterias.listaMaterias1, CargaMaterias.listaMateriasMan1);
         }
     }
     //-----------------------------------------------------------------------------------------------------------------
     //                                                  INICIO REALIZADO
-    public static void sesionOnAlumno(ArrayList<Alumno> listaAlumnos) {
+    public static int sesionOnAlumno(ArrayList<Alumno> listaAlumnos, int ingMatricula) {
         int opc, opci;
+        int ingMatricula1 = ingMatricula;
         do {
             System.out.println(">>>                    UP CHIAPAS                 <<<");
             System.out.println(">>>     Usuario: " + listaAlumnos.get(posicion).getNombre() +
@@ -100,7 +101,7 @@ public class Login {
             opc = entrada.nextInt();
             switch (opc) {
                 case 1:
-                    CargaMaterias.registrarMaterias();
+                    CargaMaterias.registrarMaterias(ingMatricula1, posicion);
                     break;
                 case 2:
                     do {
@@ -111,17 +112,17 @@ public class Login {
                         opci = entrada.nextInt();
                         switch (opci) {
                             case 1:
-                                CargaMaterias.materiaManual();
+                                CargaMaterias.materiaManual(ingMatricula1);
                                 break;
                             case 2:
                                 System.out.println("OK! >:|");
-                                sesionOnAlumno(listaAlumnos);
+                                sesionOnAlumno(listaAlumnos, ingMatricula);
                                 break;
                             default:
                                 System.out.println("Esta opcion no existe >:|");
                         }
                     } while (opci != 2);
-                    sesionOnAlumno(listaAlumnos);
+                    sesionOnAlumno(listaAlumnos, ingMatricula);
                     break;
                 case 3:
                     CargaMaterias.mostrarCarga();
@@ -132,62 +133,81 @@ public class Login {
                 default:
                     System.out.println("Esta opcion no existe >:|");
             }
+
         } while (opc != 4);
+        return ingMatricula1;
     }
 
-        public static void sesionOnDocente(ArrayList<Alumno> listaAlumnos, ArrayList<Materia> listaMaterias, ArrayList<MateriaMan> listaMateriasMan) {
+        public static void sesionOnDocente(ArrayList<Alumno> listaAlumnos, ArrayList<Materia1> listaMaterias1, ArrayList<MateriaMan1> listaMateriasMan1) {
             int buscar, opc, opc2;
-            System.out.println(">>>                     UP CHIAPAS                <<<");
-            System.out.println(">>>         Docente: Diana Beatriz                <<<");
-            System.out.print(">>>         Buscar matricula: ");
-            buscar = entrada.nextInt();
-            for (int i = 0; i < listaAlumnos.size(); i++) {
-                if (listaAlumnos.get(i).getMatricula() == buscar) {
-                    System.out.printf("Alumno: " + listaAlumnos.get(i).getNombre() +
-                                    "\nMatricula: " + listaAlumnos.get(i).getMatricula());
-                    System.out.printf("\n>      ---------Materias cargadas------------       <\n");
-                    Iterator<Materia> iterador1 = listaMaterias.iterator();
-                    while(iterador1.hasNext()){
-                        CargaMaterias.materia = iterador1.next();
-                        System.out.println(CargaMaterias.materia.getNombreMateria() + " " + CargaMaterias.materia.getGrupo());
-                    }
-                    System.out.printf("\n> -----Solicitud Materias a cargar MANUALMENTE----- <\n");
-                    Iterator<MateriaMan> iterador = listaMateriasMan.iterator();
-                    while(iterador.hasNext()){
-                        CargaMaterias.materiaMan = iterador.next();
-                        System.out.println(CargaMaterias.materiaMan.getNombreMateriaManual() + " " + CargaMaterias.materiaMan.getGrupoMan());
-                    }
-                }
-            }
-            do{
-                System.out.println(">>>         1. Hacer carga?              <<<");
-                System.out.println(">>>         2. Regresar                  <<<");
+            do {
+                System.out.println(">>>                     UP CHIAPAS                <<<");
+                System.out.println(">>>         Docente: Diana Beatriz                <<<");
+                System.out.println(">>>            1. Buscar matricula                <<<");
+                System.out.println(">              2. Cerrar Sesion                     <");
                 System.out.printf("*                      : ");
-                opc2 = entrada.nextInt();
-                switch(opc2){
+                opc = entrada.nextInt();
+                switch (opc) {
                     case 1:
-                        do {
-                            System.out.println(">>>         1. SI                        <<<");
-                            System.out.println(">>>         2. NO                        <<<");
-                            System.out.printf("*                      : ");
-                            opc = entrada.nextInt();
-                            switch (opc){
-                                case 1:
-                                    CargaMaterias.cargaMaster();
-                                    break;
-                                case 2:
-                                    CargaMaterias.noCarga();
-                                    break;
-                                default: System.out.println("Esta opcion no existe >:|");
+                        System.out.println(">>>            1. Buscar matricula            <");
+                        System.out.printf("*                      : ");
+                        buscar = entrada.nextInt();
+                        for (int i = 0; i < listaAlumnos.size(); i++) {
+                            if (listaAlumnos.get(i).getMatricula() == buscar)
+                                System.out.printf("Alumno: " + listaAlumnos.get(i).getNombre() +
+                                        "\nMatricula: " + listaAlumnos.get(i).getMatricula());
                             }
-                        }while(opc != 2);
+                            System.out.printf("\n>      ---------Materias cargadas------------       <\n");
+                        Iterator<Materia1> iterador5 = CargaMaterias.listaMaterias1.iterator();
+                        while(iterador5.hasNext()){
+                            CargaMaterias.materia1 = iterador5.next();
+                            System.out.println(CargaMaterias.materia1.getNombreMateria() + " " + CargaMaterias.materia1.getGrupo());
+                        }
+                            System.out.printf("\n> -----Solicitud Materias a cargar MANUALMENTE----- <\n");
+                        Iterator<MateriaMan1> iterador6 = CargaMaterias.listaMateriasMan1.iterator();
+                        while(iterador6.hasNext()){
+                            CargaMaterias.materiaMan1 = iterador6.next();
+                            System.out.println(CargaMaterias.materiaMan1.getNombreMateriaManual() + " " + CargaMaterias.materiaMan1.getGrupoMan());
+                        }
+                                    do {
+                                        System.out.println(">>>         1. Hacer carga?              <<<");
+                                        System.out.println(">>>         2. Regresar                  <<<");
+                                        System.out.printf("*                      : ");
+                                        opc2 = entrada.nextInt();
+                                        switch (opc2) {
+                                            case 1:
+                                                do {
+                                                    System.out.println(">>>         1. SI                        <<<");
+                                                    System.out.println(">>>         2. NO                        <<<");
+                                                    System.out.printf("*                      : ");
+                                                    opc = entrada.nextInt();
+                                                    switch (opc) {
+                                                        case 1:
+                                                            CargaMaterias.cargaMaster();
+                                                            break;
+                                                        case 2:
+                                                            CargaMaterias.noCarga();
+                                                            break;
+                                                        default:
+                                                            System.out.println("Esta opcion no existe >:|");
+                                                    }
+                                                } while (opc != 2);
+                                                break;
+                                            case 2:
+                                                sesionOnDocente(listaAlumnos, listaMaterias1, listaMateriasMan1);
+                                                break;
+                                            default:
+                                                System.out.println("Esta opcion no existe >:|");
+                                        }
+                                    } while (opc2 != 2);
                         break;
                     case 2:
-                        sesionOnDocente(listaAlumnos, listaMaterias, listaMateriasMan);
+                        iniciarSesion();
                         break;
-                    default: System.out.println("Esta opcion no existe >:|");
+                    default:
+                        System.out.println("Esta opcion no existe >:|");
                 }
-            }while(opc2 != 2);
+            }while (opc != 2);
         }
     //------------------------------------------------------------------------------------------------------------------
 }

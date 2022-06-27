@@ -25,7 +25,4 @@ public class Alumno {
     public int getContrasena(){
         return contrasena;
     }
-
-
-
 }
